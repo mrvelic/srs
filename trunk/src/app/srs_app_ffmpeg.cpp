@@ -44,6 +44,8 @@ using namespace std;
 #define SRS_RTMP_ENCODER_NO_AUDIO       "an"
 // only support libx264 encoder.
 #define SRS_RTMP_ENCODER_VCODEC         "libx264"
+#define SRS_RTMP_ENCODER_VCODEC_QSV     "h264_qsv"
+#define SRS_RTMP_ENCODER_VCODEC_NV      "h264_nvenc"
 // any aac encoder is ok which contains the aac,
 // for example, libaacplus, aac, fdkaac
 #define SRS_RTMP_ENCODER_ACODEC         "aac"
@@ -132,7 +134,9 @@ int SrsFFMPEG::initialize_transcode(SrsConfDirective* engine)
     }
     
     if (vcodec != SRS_RTMP_ENCODER_COPY && vcodec != SRS_RTMP_ENCODER_NO_VIDEO) {
-        if (vcodec != SRS_RTMP_ENCODER_VCODEC) {
+        if (vcodec != SRS_RTMP_ENCODER_VCODEC 
+            && vcodec != SRS_RTMP_ENCODER_VCODEC_QSV 
+            && vcodec != SRS_RTMP_ENCODER_VCODEC_NV) {
             ret = ERROR_ENCODER_VCODEC;
             srs_error("invalid vcodec, must be %s, actual %s, ret=%d",
                 SRS_RTMP_ENCODER_VCODEC, vcodec.c_str(), ret);
