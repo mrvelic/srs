@@ -46,6 +46,7 @@ using namespace std;
 #define SRS_RTMP_ENCODER_VCODEC         "libx264"
 #define SRS_RTMP_ENCODER_VCODEC_QSV     "h264_qsv"
 #define SRS_RTMP_ENCODER_VCODEC_NV      "h264_nvenc"
+#define SRS_RTMP_ENCODER_VCODEC_VA      "h264_vaapi"
 // any aac encoder is ok which contains the aac,
 // for example, libaacplus, aac, fdkaac
 #define SRS_RTMP_ENCODER_ACODEC         "aac"
@@ -136,7 +137,8 @@ int SrsFFMPEG::initialize_transcode(SrsConfDirective* engine)
     if (vcodec != SRS_RTMP_ENCODER_COPY && vcodec != SRS_RTMP_ENCODER_NO_VIDEO) {
         if (vcodec != SRS_RTMP_ENCODER_VCODEC 
             && vcodec != SRS_RTMP_ENCODER_VCODEC_QSV 
-            && vcodec != SRS_RTMP_ENCODER_VCODEC_NV) {
+            && vcodec != SRS_RTMP_ENCODER_VCODEC_NV
+            && vcodec != SRS_RTMP_ENCODER_VCODEC_VA) {
             ret = ERROR_ENCODER_VCODEC;
             srs_error("invalid vcodec, must be %s, actual %s, ret=%d",
                 SRS_RTMP_ENCODER_VCODEC, vcodec.c_str(), ret);
@@ -254,6 +256,16 @@ int SrsFFMPEG::start()
     // The first argument, by convention, should point to 
     // the filename associated  with  the file being executed.
     params.push_back(ffmpeg);
+    
+    // vaapi all the way
+    if(vcodec == SRS_RTMP_ENCODER_VCODEC_VA) {
+        params.push_back("-vaapi_device");
+        params.push_back("/dev/dri/renderD128");
+        params.push_back("-hwaccel");
+        params.push_back("vaapi");
+        params.push_back("-hwaccel_output_format");
+        params.push_back("vaapi");
+    }
     
     // input params
     if (!_iparams.empty()) {
