@@ -34,7 +34,7 @@ OS_IS_UBUNTU=NO
 function Ubuntu_prepare()
 {
     # definitely not ubuntu
-    if [[ ! -f /etc/redhat-release ]]; then
+    if [[ -f /etc/redhat-release ]]; then
         return 0;
     fi
 
