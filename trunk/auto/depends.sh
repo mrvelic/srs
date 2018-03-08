@@ -33,6 +33,11 @@ echo "depends tools are ok"
 OS_IS_UBUNTU=NO
 function Ubuntu_prepare()
 {
+    # definitely not ubuntu
+    if [[ ! -f /etc/redhat-release ]]; then
+        return 0;
+    fi
+
     if [ $SRS_CUBIE = YES ]; then
         echo "for cubieboard, use ubuntu prepare"
     else
