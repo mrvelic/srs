@@ -103,6 +103,7 @@ int SrsFFMPEG::initialize_transcode(SrsConfDirective* engine)
     int ret = ERROR_SUCCESS;
     
     engine_name = engine->arg0();
+    iparams             = _srs_config->get_engine_iparams(engine);
     iformat             = _srs_config->get_engine_iformat(engine);
     vfilter             = _srs_config->get_engine_vfilter(engine);
     vcodec              = _srs_config->get_engine_vcodec(engine);
@@ -254,6 +255,17 @@ int SrsFFMPEG::start()
     // input params
     if (!_iparams.empty()) {
         params.push_back(_iparams);
+    }
+
+    // custom iparams
+    if(!iparams.empty()) {
+        std::vector<std::string>::iterator it;
+        for (it = iparams.begin(); it != iparams.end(); ++it) {
+            std::string p = *it;
+            if (!p.empty()) {
+                params.push_back(p);
+            }
+        }
     }
     
     // input.

@@ -801,6 +801,11 @@ public:
     */
     virtual std::vector<std::string> get_engine_aparams(SrsConfDirective* engine);
     /**
+    * get the iparams of engine,
+    * the audio additional params.
+    */
+    virtual std::vector<std::string> get_engine_iparams(SrsConfDirective* engine);
+    /**
     * get the oformat of engine
     */
     virtual std::string         get_engine_oformat(SrsConfDirective* engine);

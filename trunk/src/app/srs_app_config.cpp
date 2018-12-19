@@ -1954,7 +1954,7 @@ int SrsConfig::check_config()
                     if (m == "engine") {
                         for (int k = 0; k < (int)trans->directives.size(); k++) {
                             string e = trans->at(k)->name;
-                            if (e != "enabled" && e != "vfilter" && e != "vcodec"
+                            if (e != "enabled" && e != "vfilter" && e != "vcodec" && e != "iparams"
                                 && e != "vbitrate" && e != "vfps" && e != "vwidth" && e != "vheight"
                                 && e != "vthreads" && e != "vprofile" && e != "vpreset" && e != "vparams"
                                 && e != "acodec" && e != "abitrate" && e != "asample_rate" && e != "achannels"
@@ -3411,6 +3411,32 @@ vector<string> SrsConfig::get_engine_aparams(SrsConfDirective* engine)
     }
     
     return aparams;
+}
+
+vector<string> SrsConfig::get_engine_iparams(SrsConfDirective* engine)
+{
+    vector<string> iparams;
+    
+    if (!engine) {
+        return iparams;
+    }
+    
+    SrsConfDirective* conf = engine->get("iparams");
+    if (!conf) {
+        return iparams;
+    }
+    
+    for (int i = 0; i < (int)conf->directives.size(); i++) {
+        SrsConfDirective* p = conf->directives[i];
+        if (!p) {
+            continue;
+        }
+        
+        iparams.push_back("-" + p->name);
+        iparams.push_back(p->arg0());
+    }
+    
+    return iparams;
 }
 
 string SrsConfig::get_engine_oformat(SrsConfDirective* engine)
